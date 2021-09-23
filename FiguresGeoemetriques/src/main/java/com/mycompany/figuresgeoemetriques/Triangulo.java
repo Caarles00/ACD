@@ -4,19 +4,18 @@ package com.mycompany.figuresgeoemetriques;
 
 public class Triangulo extends Figura{
     //Atributs
-    int hipotenusa;
+    double base;
+    double altura;
     
     //Constructor
-    public Triangulo(Punto origen,int hipotenusa, int id, String borde, String relleno) {
+    public Triangulo(double base, double altura, Punto origen, int id, String borde, String relleno) {
         super(origen, id, borde, relleno);
-        this.hipotenusa = hipotenusa;
-        
+        this.base = base;
+        this.altura = altura;
     }
 
     @Override
     public String toString() {
-        return "Triangulo{" + "lado1=" + hipotenusa + ", lado2=" + hipotenusa + '}';
-    }
-    
-    
+        return "Triangulo{" + "base=" + base + ", altura=" + altura + '}';
+    }  
 }
