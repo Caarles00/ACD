@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this template
+-->
+
+
+<hibernate-configuration>
+<session-factory>
+
+<!-- Database connection settings -->
+
+    <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+<<<<<<< HEAD:Apac3/app/hibernate.cfg.xml
+    <property name="connection.url">jdbc:mysql://localhost:3306/pokemon?createDatabaseIfNotExist=true</property>
+=======
+    <property name="connection.url">jdbc:mysql://localhost:3308/pokemon?createDatabaseIfNotExist=true</property>
+>>>>>>> 8abdfac8453f7bf68a761716b4e3078ef4ab4b57:APAC3/app/hibernate.cfg.xml
+    <property name="connection.username">root</property>
+    <property name="connection.password">root</property>
+
+    <!-- JDBC connection pool (use the built-in) -->
+    <property name="connection.pool_size">1</property>
+
+    <!-- SQL dialect -->
+    <property name="dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
+
+    <!-- Enable Hibernate's automatic session context management-->
+    <property name="current_session_context_class">thread</property>
+
+    <!-- Disable the second-level cache -->
+    <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+
+    <!-- Echo all executed SQL to stdout -->
+    <property name="show_sql">true</property>
+
+    <!-- Drop and re-create the database schema on startup -->
+    <property name="hbm2ddl.auto">update</property>
+    
+    <!-- opcions de hbm2dll:
+           create : borra i crea SEMPRE les taules
+           update : Manté les dades i actualitza estructura
+           create-drop : Crea TOT i en acabar ESBORRA tot
+           validate: comprova que tot fa MATCH
+    -->
+    
+    <!--  Mapeig en arxiu EXTERN a la classe 
+        <mapping resource="Pelicula.hbm.xml" />
+    -->
+    
+    <!-- Mapeig DINS DE LA CLASSE -->
+    <mapping class="Model.pokemon" />
+    <mapping class="Model.coach" />
+    <mapping class="Model.abilities" />
+    
+    
+</session-factory>
+</hibernate-configuration>

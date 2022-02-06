@@ -3,12 +3,244 @@
  */
 package APAC3;
 
+import Model.abilities;
+import java.util.Scanner;
+import org.hibernate.Session;
+
+import Model.coach;
+import Model.pokemon;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+import org.hibernate.query.Query;
+
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
+    public static void main(String[] args) {
+        System.out.println("Hola"); 
+        disableLogging();
+        startShell();
+        //guardarCoach();
+        System.out.println("Adeu");
+    }
+    
+    private static void disableLogging(){
+        LogManager logManager = LogManager.getLogManager();
+        Logger logger = Logger.getLogger("");
+        logger.setLevel(Level.SEVERE); //could be Level.OFF
+    }
+    
+    
+    public static void showTablePokemon(){
+        Session laSessio = HibernateUtil.getSessionFactory().getCurrentSession();
+        laSessio.beginTransaction();
+        
+        Query q = laSessio.createQuery("FROM pokemon");
+        List<pokemon> elsPokemon = q.list();
+        
+        System.out.println("---------------------------------------------------------");
+        System.out.println("Llistat dels Pokemon");
+        System.out.println("---------------------------------------------------------");
+        System.out.println(String.format("%-15s %-15s %-15s", "Id", "Nom", "Tipo"));
+        System.out.println("---------------------------------------------------------");
+        
+        for (pokemon p : elsPokemon) {
+            System.out.println(p);
+        }
+        System.out.println("---------------------------------------------------------");
+        
+        laSessio.getTransaction().commit();
+    }
+    
+    public static void showTableCoach(){
+        
+        Session laSessio = HibernateUtil.getSessionFactory().getCurrentSession();
+        laSessio.beginTransaction();
+        
+        Query q = laSessio.createQuery("FROM coach");
+        List<coach> elsCoach = q.list();
+        
+        System.out.println("---------------------------------------------------------");
+        System.out.println("Llistat dels entrenadors");
+        System.out.println("---------------------------------------------------------");
+        System.out.println(String.format("%-15s %-15s %-15s", "Id", "Nom", "Numero de pokemons"));
+        System.out.println("---------------------------------------------------------");
+        
+        for (coach c : elsCoach) {
+            System.out.println(c);
+        }
+        System.out.println("---------------------------------------------------------");
+        
+        laSessio.getTransaction().commit();
+    }
+    
+    public static void showTableAbilities(){
+        Session laSessio = HibernateUtil.getSessionFactory().getCurrentSession();
+        laSessio.beginTransaction();
+        
+        Query q = laSessio.createQuery("FROM abilities");
+        List<abilities> lesAbilities = q.list();
+        
+        System.out.println("---------------------------------------------------------");
+        System.out.println("Llistat de les habilitats");
+        System.out.println("---------------------------------------------------------");
+        System.out.println(String.format("%-15s %-15s %-15s", "Id", "Nom", "Tipo"));
+        
+        for (abilities a : lesAbilities) {
+            System.out.println(a);
+        }
+        System.out.println("---------------------------------------------------------");
+        
+        
+        laSessio.getTransaction().commit();
+    }
+    
+    public static void addPokemon(){
+        Session laSessio = HibernateUtil.getSessionFactory().getCurrentSession();
+        laSessio.beginTransaction();
+        
+        String nom = Leer.leerTexto("Digues el nom del pokemon: ");
+        String type = Leer.leerTexto("Digues el tipo de pokemon: ");
+        String pokemon_amb_entrenador = Leer.leerTexto("Aquest pokemon té algun entrenador? (s/n): ");
+        
+        while(!pokemon_amb_entrenador.equalsIgnoreCase("s") && !pokemon_amb_entrenador.equalsIgnoreCase("n")){
+            pokemon_amb_entrenador = Leer.leerTexto("Error. Aquest pokemon té algun entrenador? (s/n): ");
+        }
+        if (pokemon_amb_entrenador.equalsIgnoreCase("n")){
+            pokemon p = new pokemon(nom, type);
+            laSessio.save(p);
+        }else{
+            showTableCoach();
+            String establir_Entrenador = Leer.leerTexto("Digues el ID del entrenador al que pertany: ");
+            coach c = laSessio.get(coach.class, Long.parseLong(establir_Entrenador));
+            pokemon p = new pokemon(nom, type);
+            p.setElcoach(c);
+            laSessio.save(p);
+        }
+        
+        /*if (pokemon_amb_entrenador.equalsIgnoreCase("n")) {
+            pokemon p = new pokemon(nom, type);
+            laSessio.save(p);
+        }else{            
+            showTableCoach();
+            int establir_Entrenador = Leer.leerEntero("Digues el ID del entrenador al que pertany: ");
+            Query q = laSessio.createQuery("FROM coach");
+            List<coach> elsCoach = q.list();
+            for (coach c : elsCoach) {
+                while(establir_Entrenador != c.getIDcoach()){
+                    establir_Entrenador = Leer.leerEntero("Error. Torna a dir el ID del entrenador al que pertany: ");
+                }
+            }
+            //pokemon p = new pokemon(nom, type, establir_Entrenador);
+        }
+        */
+        
+        
+        laSessio.getTransaction().commit();
+    }
+    
+    public static void addCoach(){
+        Session laSessio = HibernateUtil.getSessionFactory().getCurrentSession();
+        laSessio.beginTransaction();
+        
+        String nom = Leer.leerTexto("Digues el nom del entrenador: ");
+        int num = Leer.leerEntero("Digues el numero de pokemons que te: ");
+        
+        coach c = new coach(nom, num);
+        laSessio.save(c);
+        
+        laSessio.getTransaction().commit();
+    }
+    
+    public static void addAbiliy(){
+        Session laSessio = HibernateUtil.getSessionFactory().getCurrentSession();
+        laSessio.beginTransaction();
+        
+        String nom = Leer.leerTexto("Digues el nom de l'habilitat: ");
+        String type = Leer.leerTexto("Digues el tipo d'habilitat: ");
+        
+        abilities a = new abilities(nom, type);
+        laSessio.save(a);
+        
+        laSessio.getTransaction().commit();
+    }
+    
+    
+    
+    public static void startShell(){
+        String command;
+        do{
+            System.out.print("BDPokemon: ");
+            Scanner keyboard = new Scanner(System.in);
+            command = keyboard.nextLine();
+            String[] subcommand = command.split(" ");
+            switch(command){
+                case "help":
+                    System.out.println("--------------------------------------------------------------");
+                    System.out.println("------               APAC 3. Ajuda bàsica              -------");
+                    System.out.println("--------------------------------------------------------------");
+                    System.out.println("\n");
+                    System.out.println("Les distintes opcions de menú són:");
+                    System.out.println("\n");
+                    System.out.println(String.format("%-25s %-25s", "ordre", "descripció"));
+                    System.out.println(String.format("%-25s %-25s", "----", "------------------------------------"));
+                    System.out.println(String.format("%-25s %-25s", "help", "Mostra l'ajuda"));
+                    System.out.println(String.format("%-25s %-25s", "show [-c] table", "Mostra el contingut d'una taula"));
+                    System.out.println(String.format("%-25s %-25s", "add table", "Afegeix un nou registre a la taula"));
+                    System.out.println(String.format("%-25s %-25s", "update table", "Actualitza una taula"));
+                    System.out.println(String.format("%-25s %-25s", "delete table", "Esborra un registre de la taula"));
+                    System.out.println(String.format("%-25s %-25s", "clear", "Netetja la pantalla"));
+                    System.out.println(String.format("%-25s %-25s", "quit", "Acaba el programa"));
+                    System.out.print("\n");
+                    System.out.println("Les taules sobre les que podem fer manteniment són:");
+                    System.out.println("--------------------------------------------------------------");
+                    break;
+                 
+                case "quit":
+                    break;
+                
+                case "show Pokemon":
+                    showTablePokemon();
+                    break;
+                
+                case "show Coach":
+                    showTableCoach();
+                    break;
+                    
+                case "show Abilities":
+                    showTableAbilities();
+                    break;
+                    
+                case "add Pokemon":
+                    addPokemon();
+                    break;
+                
+                case "add Coach":
+                    addCoach();
+                    break;
+                
+                case "add Ability":
+                    addAbiliy();
+                    break;
+                    
+                case "update":
+                    break;
+                    
+                case "delete":
+                    break;
+                
+                case "clear":
+                    break;
+                    
+                default:
+                    System.out.println("Opció desconeguda");
+                    break;
+            }
+        }while(!command.equals("quit"));
     }
 
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+    Object getGreeting() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
+
