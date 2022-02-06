@@ -32,7 +32,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'Apac3.App'
+    mainClass = 'APAC3.App'
 }
 
 tasks.named('test') {
@@ -43,9 +43,5 @@ tasks.named('test') {
 run {
     standardInput=System.in
     standardOutput=System.out
-<<<<<<< HEAD:Apac3/app/build.gradle
-}
-=======
 }
 
->>>>>>> 8abdfac8453f7bf68a761716b4e3078ef4ab4b57:APAC3/app/build.gradle

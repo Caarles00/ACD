@@ -11,11 +11,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
 <!-- Database connection settings -->
 
     <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-<<<<<<< HEAD:Apac3/app/hibernate.cfg.xml
-    <property name="connection.url">jdbc:mysql://localhost:3306/pokemon?createDatabaseIfNotExist=true</property>
-=======
     <property name="connection.url">jdbc:mysql://localhost:3308/pokemon?createDatabaseIfNotExist=true</property>
->>>>>>> 8abdfac8453f7bf68a761716b4e3078ef4ab4b57:APAC3/app/hibernate.cfg.xml
     <property name="connection.username">root</property>
     <property name="connection.password">root</property>
 
